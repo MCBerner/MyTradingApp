@@ -7,12 +7,12 @@ data class TradeItem(
     val description: String,
     val price: Double,
     val sellerEmail: String,
-    val sellerPhone: Int,
+    val sellerPhone: String,
 ) : Serializable {
     constructor(description: String,
                 price: Double,
                 sellerEmail: String,
-                sellerPhone: Int,) : this(0, description, price, sellerEmail, sellerPhone)
+                sellerPhone: String,) : this(0, description, price, sellerEmail, sellerPhone)
 
     override fun toString(): String {
         return "$id $description, $price, $sellerEmail $sellerPhone"

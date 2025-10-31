@@ -69,14 +69,6 @@ fun ListScreen(
                 sortByPrice = viewModel::sortByPrice,
                 onItemClick = onItemClick
             )
-            // Knap nederst
-            Button(
-                onClick = onProfileClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text("Gå til Profile")
-            }
         }
     }
 }
@@ -132,14 +124,9 @@ fun MyTopBar(
                     Text("Log/Reg")
                 }
             }
-
         }
-
     )
 }
-
-
-
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TradeItemListPanel(

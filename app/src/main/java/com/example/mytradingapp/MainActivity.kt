@@ -60,7 +60,7 @@ fun MainScreen(viewModel: TradeItemsViewModel = viewModel()) {
             val tradeItem = viewModel.tradeItemsLiveData.value.find { it.id == tradeItemId } ?: TradeItem(
                 description = "Not found",
                 price = 0.0, sellerEmail = "Not found",
-                sellerPhone = 0)
+                sellerPhone = "")
 
             TradeItemDetails(
                 item = tradeItem,
