@@ -34,7 +34,7 @@ import com.google.firebase.auth.FirebaseUser
 @Composable
 fun LogRegScreen(
     user: FirebaseUser? = null,
-    message: String? = null,
+    message: String? = "",
     signIn: (email: String, password: String) -> Unit = { _, _ -> },
     register: (email: String, password: String) -> Unit = { _, _ -> },
     onBackClick: () -> Unit,
@@ -97,27 +97,51 @@ fun LogRegScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = {
-                    if (email.isNotEmpty() && password.isNotEmpty()) {
-                        signIn(email, password)
+                    email = email.trim()
+                    if (email.isEmpty() || !validateEmail(email)) {
+                        emailIsError = true
+                        return@Button
                     } else {
-                        emailIsError = email.isEmpty()
-                        passwordIsError = password.isEmpty()
+                        emailIsError = false
                     }
+                    if (password.isEmpty()) {
+                        passwordIsError = true
+                        return@Button
+                    } else {
+                        passwordIsError = false
+                    }
+                    signIn(email, password)
                 }
                 ) {
                     Text(text = "Login")
                 }
-                Button(onClick = { register(email, password)
-
+                Button(onClick = {
+                    email = email.trim()
+                    if (email.isEmpty() || !validateEmail(email)) {
+                        emailIsError = true
+                        return@Button
+                    } else {
+                        emailIsError = false
+                    }
+                    if (password.isEmpty()) {
+                        passwordIsError = true
+                        return@Button
+                        } else {
+                        passwordIsError = false
+                    }
+                    register(email, password)
                 }
                 ) {
                     Text(text = "Register")
                 }
-
             }
         }
     }
 }
+private fun validateEmail(email: String): Boolean {
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

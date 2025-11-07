@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mytradingapp.model.AuthenticationViewModel
 import com.example.mytradingapp.model.TradeItem
 import com.example.mytradingapp.model.TradeItemsViewModel
 import com.example.mytradingapp.screens.ListScreen
@@ -32,10 +34,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(viewModel: TradeItemsViewModel = viewModel()) {
-    val navController = rememberNavController()
+fun MainScreen(
+    viewModel: TradeItemsViewModel = viewModel(),
+    navController: NavHostController = rememberNavController(),
+    authenticationViewModel: AuthenticationViewModel = viewModel()
+) {
+    NavHost(
+        navController = navController,
+        startDestination = NavRoutes.ListScreen.route
 
-    NavHost(navController = navController, startDestination = "listScreen") {
+    ) {
         composable(NavRoutes.ListScreen.route) {
             ListScreen(
                 onProfileClick = { navController.navigate(NavRoutes.ProfileScreen.route) },
@@ -43,12 +51,19 @@ fun MainScreen(viewModel: TradeItemsViewModel = viewModel()) {
                     navController.navigate(NavRoutes.TradeDetailsScreen.route + "/$itemId")
                 },
                 onLogRegClick = { navController.navigate(NavRoutes.LogRegScreen.route) },
+                onAddClick = {navController.navigate(NavRoutes.ProfileScreen.route)}
             )
         }
-        composable(NavRoutes.LogRegScreen.route){
-            LogRegScreen(onBackClick = { navController.popBackStack() })
+        composable(NavRoutes.LogRegScreen.route) {
+            LogRegScreen(
+                user = authenticationViewModel.user,
+                message = authenticationViewModel.message,
+                signIn = { email, password -> authenticationViewModel.signIn(email, password) },
+                register = { email, password -> authenticationViewModel.register(email, password) },
+                onBackClick = {
+                    navController.popBackStack()
+                })
         }
-
         composable(NavRoutes.ProfileScreen.route) {
             ProfileScreen(onBackClick = { navController.popBackStack() })
         }
@@ -57,16 +72,18 @@ fun MainScreen(viewModel: TradeItemsViewModel = viewModel()) {
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })
         ) { backStackEntry ->
             val tradeItemId = backStackEntry.arguments?.getInt("itemId")
-            val tradeItem = viewModel.tradeItemsLiveData.value.find { it.id == tradeItemId } ?: TradeItem(
-                description = "Not found",
-                price = 0.0, sellerEmail = "Not found",
-                sellerPhone = "")
-
+            val tradeItem =
+                viewModel.tradeItemsLiveData.value.find { it.id == tradeItemId } ?: TradeItem(
+                    description = "Not found",
+                    price = 0.0, sellerEmail = "Not found",
+                    sellerPhone = ""
+                )
             TradeItemDetails(
                 item = tradeItem,
                 onBackClick = { navController.popBackStack() }
             )
         }
     }
+
 }
 /*private fun getDateTime*/

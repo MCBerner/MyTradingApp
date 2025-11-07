@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,13 +50,23 @@ fun ListScreen(
     viewModel: TradeItemsViewModel = viewModel(),
     onProfileClick: () -> Unit,
     onItemClick: (Int) -> Unit,
-    onLogRegClick: () -> Unit
+    onLogRegClick: () -> Unit,
+    onAddClick: () -> Unit = {}
 ) {
     val tradeItems by viewModel.tradeItemsLiveData.observeAsState(emptyList())
     val errorMessage by viewModel.errorMessageLiveData.observeAsState("")
 
     Scaffold(
-        topBar = { MyTopBar(onLogRegClick = onLogRegClick) }
+        topBar = {
+            MyTopBar(
+                onLogRegClick = onLogRegClick)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onAddClick()}) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
