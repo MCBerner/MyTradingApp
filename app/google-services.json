@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "755609957717",
+    "project_id": "fir-example-f3416",
+    "storage_bucket": "fir-example-f3416.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755609957717:android:0ca87663144bbe1a07abdc",
+        "android_client_info": {
+          "package_name": "com.example.firebaseexample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzPze2kKF2qCx4zcqRilO6okv4wFT5iD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755609957717:android:82f92393dcedd0de07abdc",
+        "android_client_info": {
+          "package_name": "com.example.mytradingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzPze2kKF2qCx4zcqRilO6okv4wFT5iD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
