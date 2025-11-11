@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -37,6 +38,7 @@ fun LogRegScreen(
     message: String? = "",
     signIn: (email: String, password: String) -> Unit = { _, _ -> },
     register: (email: String, password: String) -> Unit = { _, _ -> },
+    onSignOut: () -> Unit = {},
     onBackClick: () -> Unit,
 ) {
     var email by remember { mutableStateOf("") }
@@ -47,7 +49,10 @@ fun LogRegScreen(
 
 
     Scaffold(
-        topBar = { MyLogRegTopBar(onBackClick = onBackClick) }
+        topBar = { MyLogRegTopBar(
+            onBackClick = onBackClick,
+            onSignOut = onSignOut
+        ) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             if (user != null) {
@@ -145,7 +150,7 @@ private fun validateEmail(email: String): Boolean {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyLogRegTopBar(onBackClick: () -> Unit) {
+fun MyLogRegTopBar(onBackClick: () -> Unit, onSignOut: () -> Unit) {
     TopAppBar(
         title = {
             Text(
@@ -154,6 +159,12 @@ fun MyLogRegTopBar(onBackClick: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+        },
+        actions = {
+            IconButton(onClick = { onSignOut() }) {
+                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
+            }
+
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {

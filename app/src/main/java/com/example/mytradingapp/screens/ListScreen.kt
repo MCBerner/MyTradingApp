@@ -2,7 +2,6 @@
 
 package com.example.mytradingapp.screens
 
-import android.R.attr.onClick
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +29,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,23 +38,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mytradingapp.model.TradeItem
-import com.example.mytradingapp.model.TradeItemsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
-    viewModel: TradeItemsViewModel = viewModel(),
-    onProfileClick: () -> Unit,
+    tradeItems: List<TradeItem>,
+    errorMessage: String,
+    tradeItemsLoading: Boolean,
+    onTradeItemsReload: () -> Unit,
+    onAddClick: () -> Unit,
     onItemClick: (Int) -> Unit,
     onLogRegClick: () -> Unit,
-    onAddClick: () -> Unit = {}
+    filterByDescription: (String) -> Unit,
+    sortByDescription: (Boolean) -> Unit,
+    sortByPrice: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val tradeItems by viewModel.tradeItemsLiveData.observeAsState(emptyList())
-    val errorMessage by viewModel.errorMessageLiveData.observeAsState("")
 
-    Scaffold(
+        Scaffold(modifier = modifier,
         topBar = {
             MyTopBar(
                 onLogRegClick = onLogRegClick)
@@ -76,11 +76,11 @@ fun ListScreen(
             TradeItemListPanel(
                 tradeItems = tradeItems,
                 errorMessage = errorMessage,
-                onTradeItemsReload = { viewModel.reload() },
-                tradeItemsLoading = false,
-                onSearch = viewModel::search,
-                sortByDescription = viewModel::sortByDescription,
-                sortByPrice = viewModel::sortByPrice,
+                tradeItemsLoading = tradeItemsLoading,
+                onTradeItemsReload = onTradeItemsReload,
+                filterByDescription = filterByDescription,
+                sortByDescription = sortByDescription,
+                sortByPrice = sortByPrice,
                 onItemClick = onItemClick
             )
         }
@@ -89,7 +89,7 @@ fun ListScreen(
 
 @Composable
 fun TradeItemCard(
-    item: TradeItem,
+    tradeItem: TradeItem,
     onClick: () -> Unit
 ) {
     Card(
@@ -107,11 +107,11 @@ fun TradeItemCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${item.description} ",
+                text = "${tradeItem.description} ",
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "${item.price} USD",
+                text = "${tradeItem.price} USD",
             )
         }
     }
@@ -148,8 +148,8 @@ private fun TradeItemListPanel(
     modifier: Modifier = Modifier,
     errorMessage: String,
     onTradeItemsReload: () -> Unit = {},
+    filterByDescription: (String) -> Unit,
     tradeItemsLoading: Boolean = false,
-    onSearch: (String) -> Unit,
     sortByDescription: (Boolean) -> Unit,
     sortByPrice: (Boolean) -> Unit,
     onItemClick: (Int) -> Unit
@@ -169,7 +169,7 @@ private fun TradeItemListPanel(
                 modifier = Modifier.weight(1f)
             )
             Button(
-                onClick = { onSearch(searchQuery) },
+                onClick = { filterByDescription(searchQuery) },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Search")
@@ -208,7 +208,7 @@ private fun TradeItemListPanel(
             LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
                 items(tradeItems) { tradeItem ->
                     TradeItemCard(
-                        item = tradeItem,
+                        tradeItem = tradeItem,
                         onClick = { onItemClick(tradeItem.id) }
                     )
                 }

@@ -1,40 +1,44 @@
 package com.example.mytradingapp.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import com.example.mytradingapp.repository.MyTradingAppRepository
 
 class TradeItemsViewModel : ViewModel() {
     private val repository = MyTradingAppRepository()
-    val tradeItemsLiveData: LiveData<List<TradeItem>> = repository.tradeItemsLiveData
-    val errorMessageLiveData: LiveData<String> = repository.errorMessageLiveData
-    val itemLiveData = MutableLiveData<TradeItem>()
+    val tradeItems: State<List<TradeItem>> = repository.tradeItems
+    val errorMessage: State<String> = repository.errorMessage
+    val isLoadingTradeItems: State<Boolean> = repository.isLoadingTradeItems
+
+    //val tradeItemsLiveData: LiveData<List<TradeItem>> = repository.tradeItemsLiveData
+    //val errorMessageLiveData: LiveData<String> = repository.errorMessageLiveData
+    //val tradeItemLiveData = MutableLiveData<TradeItem>()
 
     init {
         reload()
     }
+
     fun reload() {
-        repository.getTradingItems()
+        repository.getTradeItems()
     }
-    fun search(query: String) {
-        repository.search(query)
+
+    fun filterByDescription(descriptionFragment: String) {
+        repository.filterByDescription(descriptionFragment)
     }
+
     fun sortByDescription(ascending: Boolean) {
         repository.sortByDescription(ascending)
     }
+
     fun sortByPrice(ascending: Boolean) {
         repository.sortByPrice(ascending)
     }
 
-    operator fun get(index: Int): TradeItem? {
-        return tradeItemsLiveData.value?.get(index)
+    fun getTradeItems(){
+        repository.getTradeItems()
     }
 
-    /*fun getById(id: Int) {
-        repository.getById(id){ item ->
-            itemLiveData.postValue(item)
-        }
-
-    }*/
+    fun addTradeItem(tradeItem: TradeItem) {
+        repository.addTradeItem(tradeItem)
+    }
 }

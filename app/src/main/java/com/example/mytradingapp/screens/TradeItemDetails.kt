@@ -14,6 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -25,14 +29,19 @@ import com.example.mytradingapp.model.TradeItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TradeItemDetails(
+    tradeItem: TradeItem,
     modifier: Modifier = Modifier,
-    item: TradeItem,
     onBackClick: () -> Unit,
 ) {
+    var description by remember { mutableStateOf(tradeItem.description) }
+    var priceStr by remember { mutableStateOf(tradeItem.price.toString()) }
+    var sellerEmail by remember { mutableStateOf(tradeItem.sellerEmail) }
+    var sellerPhone by remember { mutableStateOf(tradeItem.sellerPhone) }
+
     Scaffold(
         topBar = { MyTradeItemsDetailsBar(onBackClick = onBackClick) }
     ) { innerPadding ->
-        if (item == null) {
+        if (tradeItem == null) {
             Text("Item not found or loading...", modifier = Modifier.padding(innerPadding))
         } else {
             Column(
@@ -50,28 +59,28 @@ fun TradeItemDetails(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
-                        Text(item.description, fontSize = 18.sp)
+                        Text(tradeItem.description, fontSize = 18.sp)
                         Text(
                             "Price:",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(top = 16.dp)
                         )
-                        Text(item.price.toString(), fontSize = 18.sp)
+                        Text(tradeItem.price.toString(), fontSize = 18.sp)
                         Text(
                             "Seller Email:",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(top = 16.dp)
                         )
-                        Text(text = item.sellerEmail, fontSize = 18.sp)
+                        Text(text = tradeItem.sellerEmail, fontSize = 18.sp)
                         Text(
                             "Seller Phone",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(top = 16.dp)
                         )
-                        Text(item.sellerPhone.toString(), fontSize = 18.sp)
+                        Text(tradeItem.sellerPhone.toString(), fontSize = 18.sp)
                     }
                 }
             }

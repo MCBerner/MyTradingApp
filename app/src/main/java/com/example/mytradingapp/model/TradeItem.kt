@@ -3,16 +3,16 @@ package com.example.mytradingapp.model
 import java.io.Serializable
 
 data class TradeItem(
-    val id: Int,
+    val id: Int = 0,
     val description: String,
     val price: Double,
     val sellerEmail: String,
     val sellerPhone: String,
+    val time: Int = 0,
+    val pictureUrl: String = ""
 ) : Serializable {
-    constructor(description: String,
-                price: Double,
-                sellerEmail: String,
-                sellerPhone: String,) : this(0, description, price, sellerEmail, sellerPhone)
+    constructor(description: String, price: Double, sellerEmail: String, sellerPhone: String) :
+            this(0, description, price, sellerEmail, sellerPhone)
 
     override fun toString(): String {
         return "$id $description, $price, $sellerEmail $sellerPhone"
