@@ -12,7 +12,7 @@ data class TradeItem(
     val pictureUrl: String = ""
 ) : Serializable {
     constructor(description: String, price: Int, sellerEmail: String, sellerPhone: String) :
-            this(0, description, price, sellerEmail, sellerPhone)
+            this(-1, description, price, sellerEmail, sellerPhone)
 
     override fun toString(): String {
         return "$id $description, $price, $sellerEmail $sellerPhone"

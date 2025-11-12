@@ -51,12 +51,16 @@ fun MainScreen(
                 errorMessage = errorMessage,
                 tradeItemsLoading = isLoadingTradeItem,
                 onTradeItemsReload = { viewModel.reload() },
-                onItemClick = { tradeItemId -> navController.navigate(NavRoutes.TradeDetailsScreen.route + "/${tradeItemId}") },
-                onLogRegClick = { navController.navigate(NavRoutes.LogRegScreen.route) },
+                onItemClick = { tradeItemId -> navController.navigate(
+                    NavRoutes.TradeDetailsScreen.route + "/${tradeItemId}") },
+                onLogin = { navController.navigate(NavRoutes.LogRegScreen.route) },
+                onSignOut = { authenticationViewModel.signOut() },
+                onDeleteItem = { tradeItem -> viewModel.deleteTradeItem(tradeItem) },
                 onAddClick = { navController.navigate(NavRoutes.AddTradeItemScreen.route) },
                 filterByDescription = { viewModel.filterByDescription(it) },
                 sortByDescription = { viewModel.sortByDescription(ascending = it) },
-                sortByPrice = { viewModel.sortByPrice(ascending = it) }
+                sortByPrice = { viewModel.sortByPrice(ascending = it) },
+                currentUser = authenticationViewModel.user
             )
         }
         composable(NavRoutes.LogRegScreen.route) {

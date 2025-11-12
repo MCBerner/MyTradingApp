@@ -20,7 +20,6 @@ class MyTradingAppRepository {
     //val allTradeItems: MutableState<List<TradeItem>> = mutableStateOf(listOf())
 
 
-
     init {
         val build: Retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -33,7 +32,10 @@ class MyTradingAppRepository {
     fun getTradeItems() {
         isLoadingTradeItems.value = true
         myTradingAppService.getAllTradeItems().enqueue(object : Callback<List<TradeItem>> {
-            override fun onResponse(call: Call<List<TradeItem>>, response: Response<List<TradeItem>>) {
+            override fun onResponse(
+                call: Call<List<TradeItem>>,
+                response: Response<List<TradeItem>>,
+            ) {
                 isLoadingTradeItems.value = false
                 if (response.isSuccessful) {
                     val tradeItemList: List<TradeItem>? = response.body()
@@ -83,7 +85,31 @@ class MyTradingAppRepository {
             }
         })
     }
+    fun deleteTradeItem(id: Int) {
+        Log.d("APPEL", "delete trade item: $id")
+        myTradingAppService.deleteTradeItem(id).enqueue(object : Callback<TradeItem> {
+            override fun onResponse(call: Call<TradeItem?>, response: Response<TradeItem>) {
+                if (response.isSuccessful) {
+                    Log.d("APPEL", "Trade item deleted:" + response.body())
+                    errorMessage.value = ""
+                    getTradeItems()
 
+                }else{
+                    val message = response.code().toString() + "" + response.message()
+                    errorMessage.value = message
+                    Log.e("APPEL" ,"Not deleted:, $message")
+                }
+
+            }
+            override fun onFailure(call: Call<TradeItem?>, t: Throwable) {
+                val message = t.message ?: "No connection to backend"
+                errorMessage.value = message
+                Log.e("APPEL", message)
+            }
+        })
+
+
+    }
     fun filterByDescription(descriptionFragment: String) {
         val filtered = tradeItems.value.filter {
             it.description.contains(descriptionFragment, ignoreCase = true)
