@@ -76,7 +76,7 @@ fun MainScreen(
             val itemId = backStackEntry.arguments?.getString("itemId")?.toIntOrNull()
             val tradeItem = viewModel.tradeItems.value.find { it.id == itemId } ?: TradeItem(
                 description = "no item found",
-                price = 0.0,
+                price = 0,
                 sellerEmail = "no mail found",
                 sellerPhone = "no number found"
             )
@@ -87,11 +87,13 @@ fun MainScreen(
             )
         }
         composable(NavRoutes.AddTradeItemScreen.route) {
-            val tradeItem = null;
+            val currentUserEmail = authenticationViewModel.user?.email ?: "chami@gmail.com"
+
             AddTradeItemScreen(
                 modifier = modifier,
-                sellerEmail = authenticationViewModel.user?.email.toString(),
-                addTradeItem = { tradeItem -> viewModel.addTradeItem(tradeItem) },
+                sellerEmail = currentUserEmail,
+                addTradeItem = { tradeItem ->
+                    viewModel.addTradeItem(tradeItem) },
                 onBackClick = { navController.popBackStack() },
             )
         }

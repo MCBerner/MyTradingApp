@@ -46,7 +46,7 @@ fun AddTradeItemScreen(
     var sellerPhoneIsError by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {MyAddTradeItemTopBar(onBackClick = onBackClick) }
+        topBar = {MyAddTradeItemTopBar(onBackClick = onBackClick, ) }
     ) { innerPadding ->
         Column(modifier = modifier.padding(paddingValues = innerPadding)) {
 
@@ -113,20 +113,19 @@ fun AddTradeItemScreen(
                 Button(onClick = {
                     var hasError = false
                     if (description.isEmpty()) { descriptionIsError = true; hasError = true }
-                    val price = priceStr.toDoubleOrNull()
-                    if (price == null) { priceIsError = true; hasError = true }
+                    val price = priceStr.toInt()
+                    //if (price == null) { priceIsError = true; hasError = true }
                     if (sellerPhone.isEmpty()) { sellerPhoneIsError = true; hasError = true }
 
                     if (hasError) return@Button
 
                     val tradeItem = TradeItem(
                         description = description,
-                        price = price!!,
+                        price = price,
                         sellerEmail = sellerEmail,
-                        sellerPhone = sellerPhone,
-                        time = 0,
-                        pictureUrl = ""
+                        sellerPhone = sellerPhone
                     )
+                  //  val tradeItem = TradeItem("Morten", 23.0, "chami@gmail.com", "12341234")
                     addTradeItem(tradeItem)
                     onBackClick()
                 }) {
@@ -147,6 +146,7 @@ fun MyAddTradeItemTopBar(onBackClick: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {

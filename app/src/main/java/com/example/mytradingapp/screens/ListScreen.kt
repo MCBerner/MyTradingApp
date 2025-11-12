@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -21,6 +23,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -54,12 +57,14 @@ fun ListScreen(
     sortByDescription: (Boolean) -> Unit,
     sortByPrice: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onLogin: () -> Unit = {},
+    onSignOut: () -> Unit = {},
 ) {
 
         Scaffold(modifier = modifier,
         topBar = {
             MyTopBar(
-                onLogRegClick = onLogRegClick)
+                onLogin = onLogin , onSignOut = onSignOut)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -120,7 +125,8 @@ fun TradeItemCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopBar(
-    onLogRegClick: () -> Unit) {
+    onLogin: () -> Unit, onSignOut: () -> Unit
+) {
     TopAppBar(
         title = {
             Row (
@@ -132,13 +138,18 @@ fun MyTopBar(
                     text = "My Trading App",
                     fontSize = 20.sp
                 )
-                Button(
-                    onClick = onLogRegClick,
-                ) {
-                    Text("Log/Reg")
-                }
             }
+        },
+        actions = {
+            IconButton(onClick = { onLogin() }) {
+                Icon(Icons.AutoMirrored.Filled.Login, contentDescription = "Login")
+            }
+            IconButton(onClick = { onSignOut() }) {
+                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
+            }
+
         }
+
     )
 }
 @Composable

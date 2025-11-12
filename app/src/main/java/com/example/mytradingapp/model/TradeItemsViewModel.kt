@@ -41,4 +41,8 @@ class TradeItemsViewModel : ViewModel() {
     fun addTradeItem(tradeItem: TradeItem) {
         repository.addTradeItem(tradeItem)
     }
+
+    /*fun deleteTradeItem(tradeItem: TradeItem) {
+        repository.deleteTradeItem(tradeItem)
+    }*/
 }
