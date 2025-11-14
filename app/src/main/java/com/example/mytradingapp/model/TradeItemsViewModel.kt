@@ -15,7 +15,6 @@ class TradeItemsViewModel : ViewModel() {
 
     var description by mutableStateOf("")
     var priceStr by mutableStateOf("")
-    var price by mutableStateOf(0)
     var sellerPhone by mutableStateOf("")
     var searchQuery by mutableStateOf("")
 

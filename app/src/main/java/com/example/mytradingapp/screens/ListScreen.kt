@@ -235,7 +235,7 @@ private fun TradeItemListPanel(
             OutlinedTextField(
                 value = viewModel.searchQuery,
                 onValueChange = { viewModel.searchQuery = it },
-                label = { Text("Search by description or price") },
+                label = { Text("Search by description") },
                 modifier = Modifier.weight(1f)
             )
             Button(

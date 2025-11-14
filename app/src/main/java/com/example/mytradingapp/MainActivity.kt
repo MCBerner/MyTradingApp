@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: TradeItemsViewModel = viewModel(),
-    //navController: NavHostController = rememberNavController(),
     authenticationViewModel: AuthenticationViewModel = viewModel(),
 ) {
     val navController = rememberNavController()

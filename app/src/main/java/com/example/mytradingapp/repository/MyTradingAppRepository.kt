@@ -96,6 +96,10 @@ class MyTradingAppRepository {
         })
     }
     fun filterByDescription(descriptionFragment: String) {
+        if (descriptionFragment.isEmpty()) {
+            getTradeItems()
+            return
+        }
         val filtered = tradeItems.value.filter {
             it.description.contains(descriptionFragment, ignoreCase = true)
         }
