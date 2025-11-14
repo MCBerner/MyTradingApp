@@ -47,12 +47,13 @@ fun LogRegScreen(
     var passwordIsError by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
 
-
     Scaffold(
-        topBar = { MyLogRegTopBar(
-            onBackClick = onBackClick,
-            onSignOut = onSignOut
-        ) }
+        topBar = {
+            MyLogRegTopBar(
+                onBackClick = onBackClick,
+                onSignOut = onSignOut
+            )
+        }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             if (user != null) {
@@ -131,7 +132,7 @@ fun LogRegScreen(
                     if (password.isEmpty()) {
                         passwordIsError = true
                         return@Button
-                        } else {
+                    } else {
                         passwordIsError = false
                     }
                     register(email, password)
@@ -143,10 +144,10 @@ fun LogRegScreen(
         }
     }
 }
+
 private fun validateEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -164,7 +165,6 @@ fun MyLogRegTopBar(onBackClick: () -> Unit, onSignOut: () -> Unit) {
             IconButton(onClick = { onSignOut() }) {
                 Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
             }
-
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -174,6 +174,5 @@ fun MyLogRegTopBar(onBackClick: () -> Unit, onSignOut: () -> Unit) {
                 )
             }
         },
-
         )
 }

@@ -14,10 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mytradingapp.model.TradeItem
+import com.example.mytradingapp.utilities.ToDateTimeString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,11 +30,6 @@ fun TradeItemDetails(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    var description by remember { mutableStateOf(tradeItem.description) }
-    var priceStr by remember { mutableStateOf(tradeItem.price.toString()) }
-    var sellerEmail by remember { mutableStateOf(tradeItem.sellerEmail) }
-    var sellerPhone by remember { mutableStateOf(tradeItem.sellerPhone) }
-
     Scaffold(
         topBar = { MyTradeItemsDetailsBar(onBackClick = onBackClick) }
     ) { innerPadding ->
@@ -81,6 +73,13 @@ fun TradeItemDetails(
                             modifier = Modifier.padding(top = 16.dp)
                         )
                         Text(tradeItem.sellerPhone.toString(), fontSize = 18.sp)
+                        Text(
+                            "Timestamp:",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                        Text(tradeItem.time.ToDateTimeString(), fontSize = 18.sp)
                     }
                 }
             }

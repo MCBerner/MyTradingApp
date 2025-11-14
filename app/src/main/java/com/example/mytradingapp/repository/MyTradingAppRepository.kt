@@ -9,16 +9,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 class MyTradingAppRepository {
     private val baseUrl = "https://anbo-salesitems.azurewebsites.net/api/"
     private val myTradingAppService: MyTradingAppService
     val tradeItems: MutableState<List<TradeItem>> = mutableStateOf(listOf())
     val isLoadingTradeItems = mutableStateOf(false)
     val errorMessage = mutableStateOf("")
-
-    //val allTradeItems: MutableState<List<TradeItem>> = mutableStateOf(listOf())
-
 
     init {
         val build: Retrofit = Retrofit.Builder()
@@ -28,7 +24,6 @@ class MyTradingAppRepository {
         myTradingAppService = build.create(MyTradingAppService::class.java)
         getTradeItems()
     }
-
     fun getTradeItems() {
         isLoadingTradeItems.value = true
         myTradingAppService.getAllTradeItems().enqueue(object : Callback<List<TradeItem>> {
@@ -46,21 +41,15 @@ class MyTradingAppRepository {
                     errorMessage.value = message
                     Log.e("APPEL", message)
                 }
-
             }
-
             override fun onFailure(call: Call<List<TradeItem>>, t: Throwable) {
                 isLoadingTradeItems.value = false
                 val message = t.message ?: "No connection to backend"
                 errorMessage.value = message
                 Log.e("APPEL", message)
-
             }
-
-
         })
     }
-
     fun addTradeItem(tradeItem: TradeItem) {
         myTradingAppService.addTradeItem(tradeItem).enqueue(object : Callback<TradeItem> {
             override fun onResponse(
@@ -77,7 +66,6 @@ class MyTradingAppRepository {
                     Log.e("APPEL", message)
                 }
             }
-
             override fun onFailure(call: Call<TradeItem?>, t: Throwable) {
                 val message = t.message ?: "No connection to backend"
                 errorMessage.value = message
@@ -99,7 +87,6 @@ class MyTradingAppRepository {
                     errorMessage.value = message
                     Log.e("APPEL" ,"Not deleted:, $message")
                 }
-
             }
             override fun onFailure(call: Call<TradeItem?>, t: Throwable) {
                 val message = t.message ?: "No connection to backend"
@@ -107,8 +94,6 @@ class MyTradingAppRepository {
                 Log.e("APPEL", message)
             }
         })
-
-
     }
     fun filterByDescription(descriptionFragment: String) {
         val filtered = tradeItems.value.filter {
@@ -116,7 +101,6 @@ class MyTradingAppRepository {
         }
         tradeItems.value = filtered
     }
-
     fun sortByDescription(ascending: Boolean) {
         Log.d("APPEL", "sort by description")
         if (ascending) tradeItems.value = tradeItems.value.sortedBy { it.description }
@@ -124,7 +108,6 @@ class MyTradingAppRepository {
             tradeItems.value = tradeItems.value.sortedByDescending { it.description }
         }
     }
-
     fun sortByPrice(ascending: Boolean) {
         Log.d("APPEL", "sort by price")
         tradeItems.value = if (ascending) {
@@ -132,8 +115,5 @@ class MyTradingAppRepository {
         } else {
             tradeItems.value.sortedByDescending { it.price }
         }
-
-
     }
-
 }

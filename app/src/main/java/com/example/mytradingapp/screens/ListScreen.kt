@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mytradingapp.model.TradeItem
+import com.example.mytradingapp.model.TradeItemsViewModel
 import com.google.firebase.auth.FirebaseUser
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,14 +59,14 @@ fun ListScreen(
     onTradeItemsReload: () -> Unit,
     onAddClick: () -> Unit,
     onItemClick: (Int) -> Unit,
-    filterByDescription: (String) -> Unit,
     sortByDescription: (Boolean) -> Unit,
     sortByPrice: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onLogin: () -> Unit = {},
     onSignOut: () -> Unit = {},
     onDeleteItem: (TradeItem) -> Unit,
-    currentUser: FirebaseUser?
+    currentUser: FirebaseUser?,
+    viewModel: TradeItemsViewModel
 ) {
 
         Scaffold(modifier = modifier,
@@ -74,7 +75,6 @@ fun ListScreen(
                 isSignedIn = (currentUser != null),
                 onLogin = onLogin , onSignOut = onSignOut)
         },
-
             floatingActionButtonPosition = FabPosition.End ,
         floatingActionButton = {
             if (currentUser != null)
@@ -95,12 +95,12 @@ fun ListScreen(
                 errorMessage = errorMessage,
                 tradeItemsLoading = tradeItemsLoading,
                 onTradeItemsReload = onTradeItemsReload,
-                filterByDescription = filterByDescription,
                 onDeleteItem = onDeleteItem,
                 sortByDescription = sortByDescription,
                 sortByPrice = sortByPrice,
                 onItemClick = onItemClick,
-                currentUser = currentUser
+                currentUser = currentUser,
+                viewModel = viewModel
             )
         }
     }
@@ -112,7 +112,6 @@ fun TradeItemCard(
     onClick: () -> Unit,
     onDelete: () -> Unit,
     canDelete: Boolean
-
     ) {
     var showDialog by remember { mutableStateOf(false) }
     Card(
@@ -210,9 +209,7 @@ fun MyTopBar(
                     Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
                 }
             }
-
         }
-
     )
 }
 @Composable
@@ -222,30 +219,27 @@ private fun TradeItemListPanel(
     modifier: Modifier = Modifier,
     errorMessage: String,
     onTradeItemsReload: () -> Unit = {},
-    filterByDescription: (String) -> Unit,
     tradeItemsLoading: Boolean = false,
     sortByDescription: (Boolean) -> Unit,
     sortByPrice: (Boolean) -> Unit,
     onItemClick: (Int) -> Unit,
     onDeleteItem: (TradeItem) -> Unit,
-    currentUser: FirebaseUser?
+    currentUser: FirebaseUser?,
+    viewModel: TradeItemsViewModel,
 ) {
-
     Column(modifier = modifier.padding(8.dp)) {
         if (errorMessage.isNotEmpty()) {
             Text(text = "Problem: $errorMessage")
         }
-        var searchQuery by remember { mutableStateOf("") }
-
         Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = viewModel.searchQuery,
+                onValueChange = { viewModel.searchQuery = it },
                 label = { Text("Search by description or price") },
                 modifier = Modifier.weight(1f)
             )
             Button(
-                onClick = { filterByDescription(searchQuery) },
+                onClick = { viewModel.filterByDescription() },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Search")

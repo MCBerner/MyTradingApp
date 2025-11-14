@@ -1,6 +1,9 @@
 package com.example.mytradingapp.model
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.mytradingapp.repository.MyTradingAppRepository
 
@@ -10,9 +13,14 @@ class TradeItemsViewModel : ViewModel() {
     val errorMessage: State<String> = repository.errorMessage
     val isLoadingTradeItems: State<Boolean> = repository.isLoadingTradeItems
 
-    //val tradeItemsLiveData: LiveData<List<TradeItem>> = repository.tradeItemsLiveData
-    //val errorMessageLiveData: LiveData<String> = repository.errorMessageLiveData
-    //val tradeItemLiveData = MutableLiveData<TradeItem>()
+    var description by mutableStateOf("")
+    var priceStr by mutableStateOf("")
+    var price by mutableStateOf(0)
+    var sellerPhone by mutableStateOf("")
+    var searchQuery by mutableStateOf("")
+
+
+
 
     init {
         reload()
@@ -22,8 +30,8 @@ class TradeItemsViewModel : ViewModel() {
         repository.getTradeItems()
     }
 
-    fun filterByDescription(descriptionFragment: String) {
-        repository.filterByDescription(descriptionFragment)
+    fun filterByDescription() {
+        repository.filterByDescription(searchQuery)
     }
 
     fun sortByDescription(ascending: Boolean) {
@@ -34,7 +42,7 @@ class TradeItemsViewModel : ViewModel() {
         repository.sortByPrice(ascending)
     }
 
-    fun getTradeItems(){
+    fun getTradeItems() {
         repository.getTradeItems()
     }
 

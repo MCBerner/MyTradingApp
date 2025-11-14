@@ -27,20 +27,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mytradingapp.model.TradeItem
-
+import com.example.mytradingapp.model.TradeItemsViewModel
 
 @Composable
 fun AddTradeItemScreen(
     modifier: Modifier = Modifier,
     sellerEmail: String,
     addTradeItem: (TradeItem) -> Unit = {},
-    onDeleteItem: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
+    viewModel: TradeItemsViewModel
 ) {
-    var description by remember { mutableStateOf("") }
-    var priceStr by remember { mutableStateOf("") }
-    var sellerPhone by remember { mutableStateOf("") }
-
     var descriptionIsError by remember { mutableStateOf(false) }
     var priceIsError by remember { mutableStateOf(false) }
     var sellerPhoneIsError by remember { mutableStateOf(false) }
@@ -51,9 +47,9 @@ fun AddTradeItemScreen(
         Column(modifier = modifier.padding(paddingValues = innerPadding)) {
 
             OutlinedTextField(
-                value = description,
+                value = viewModel.description,
                 onValueChange = {
-                    description = it
+                    viewModel.description = it
                     descriptionIsError = false
                 },
                 label = { Text("New Item") },
@@ -67,11 +63,10 @@ fun AddTradeItemScreen(
                     fontSize = 14.sp
                 )
             }
-
             OutlinedTextField(
-                value = priceStr,
+                value = viewModel.priceStr,
                 onValueChange = {
-                    priceStr = it
+                    viewModel.priceStr = it
                     priceIsError = false
                 },
                 label = { Text("Price") },
@@ -85,11 +80,10 @@ fun AddTradeItemScreen(
                     fontSize = 14.sp
                 )
             }
-
             OutlinedTextField(
-                value = sellerPhone,
+                value = viewModel.sellerPhone,
                 onValueChange = {
-                    sellerPhone = it
+                    viewModel.sellerPhone = it
                     sellerPhoneIsError = false
                 },
                 label = { Text("Phone Number") },
@@ -112,18 +106,19 @@ fun AddTradeItemScreen(
             {
                 Button(onClick = {
                     var hasError = false
-                    if (description.isEmpty()) { descriptionIsError = true; hasError = true }
-                    val price = priceStr.toInt()
-                    //if (price == null) { priceIsError = true; hasError = true }
-                    if (sellerPhone.isEmpty()) { sellerPhoneIsError = true; hasError = true }
+                    if (viewModel.description.isEmpty()) { descriptionIsError = true; hasError = true }
+                    val price = viewModel.priceStr.toInt()
+                    //if (viewModel.price == null) { priceIsError = true; hasError = true }
+                    if (viewModel.sellerPhone.isEmpty()) { sellerPhoneIsError = true; hasError = true }
 
                     if (hasError) return@Button
 
                     val tradeItem = TradeItem(
-                        description = description,
+                        description = viewModel.description,
                         price = price,
                         sellerEmail = sellerEmail,
-                        sellerPhone = sellerPhone
+                        sellerPhone = viewModel.sellerPhone,
+                        time = System.currentTimeMillis() /1000
                     )
                   //  val tradeItem = TradeItem("Morten", 23.0, "chami@gmail.com", "12341234")
                     addTradeItem(tradeItem)
@@ -146,7 +141,6 @@ fun MyAddTradeItemTopBar(onBackClick: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -158,69 +152,3 @@ fun MyAddTradeItemTopBar(onBackClick: () -> Unit) {
         },
     )
 }
-/*@Composable
-fun ItemsCard(
-    item: String, modifier: Modifier = Modifier,
-    onDelete: () -> Unit = {},
-) {
-    var showDialog by remember { mutableStateOf(false) }
-
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(red = 40, green = 180, blue = 160),
-            contentColor = Color.White
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(2.dp),
-            verticalAlignment = CenterVertically
-        ) {
-            Text(text = item, modifier = Modifier.padding(8.dp))
-            Spacer(modifier = Modifier.weight(1f))
-
-            IconButton(onClick = { showDialog = true }) {
-                Icon(Icons.Outlined.Delete, contentDescription = "Delete")
-            }
-        }
-    }
-    if (showDialog) {
-        AlertDialogExample(
-            onDismissRequest = { showDialog = false },
-            onConfirmation = {
-                onDelete()
-                showDialog = false
-            },
-            dialogTitle = "Delete?",
-            dialogText = "Are you sure?",
-            icon = Icons.Outlined.Delete
-        )
-    }
-}
-@Composable
-fun AlertDialogExample(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String,
-    icon: ImageVector,
-) {
-    AlertDialog(
-        icon = { Icon(icon, contentDescription = "Example Icon") },
-        title = { Text(text = dialogTitle) },
-        text = { Text(text = dialogText) },
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onClick = onConfirmation) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text("Dismiss")
-            }
-        }
-    )
-}*/
